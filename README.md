@@ -9,6 +9,12 @@ A smart lead automation system built with **n8n** to capture, qualify, and score
 
 ---
 
+## 🧩 Workflow Preview
+
+![Lead Scoring Workflow in n8n](https://github.com/Paul-Tobiloba/REM-Waste/blob/a602b11fd8830b5acd1e9229a8d14530b51532ee/Screenshot%202025-07-03%20235733.png)
+
+---
+
 ## 🎯 Objective
 
 This workflow captures, qualifies, scores, and stores incoming leads from a Typeform. It then:
