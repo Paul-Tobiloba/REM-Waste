@@ -1,0 +1,875 @@
+{
+  "name": "Lead Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "loose",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "49ddbc8a-fce3-4f47-9ec0-4b1f93ed0d5b",
+              "leftValue": "={{ $json.fields.full_name }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "214227f2-9748-4359-b65c-ea628e59df3d",
+              "leftValue": "={{ $json.fields.email }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "c15b4201-af89-4832-9ec5-70c919d465fe",
+              "leftValue": "={{ $json.fields.budget }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            },
+            {
+              "id": "88dff504-e7f0-40f9-944d-8f487009a67f",
+              "leftValue": "={{ $json.fields.interest_level }}",
+              "rightValue": "",
+              "operator": {
+                "type": "string",
+                "operation": "notEmpty",
+                "singleValue": true
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "looseTypeValidation": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        660,
+        40
+      ],
+      "id": "864a37ff-f994-4ef0-a10a-660bbf721d5d",
+      "name": "If"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Based on the following lead data, classify the lead as \"Hot\", \"Warm\", or \"Cold\".\n- Full Name: {{$json.fields.full_name}}\n- Budget: £{{$json.fields.budget}}\n- Interest Level: {{$json.fields.interest_level}}\n- Company Size: {{$json.fields.company_size}}\n\nRespond with only the classification word.\n",
+        "options": {
+          "systemMessage": "=Based on the following lead data, classify the lead as \"Hot\", \"Warm\", or \"Cold\".\n- Full Name: {{$json.fields.full_name}}\n- Budget: £{{$json.fields.budget}}\n- Interest Level: {{$json.fields.interest_level}}\n- Company Size: {{$json.fields.company_size}}\n\nRespond with only the classification word.\n"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.7,
+      "position": [
+        940,
+        0
+      ],
+      "id": "edc89de0-c405-4f56-9683-f35548bae10a",
+      "name": "Lead Qualification + Scoring Agent1"
+    },
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.1,
+      "position": [
+        1000,
+        280
+      ],
+      "id": "6af88566-6aa0-4cb3-bd0a-8cfed414f08a",
+      "name": "OpenAI Chat Model4",
+      "credentials": {
+        "openAiApi": {
+          "id": "KcFwhgDWR34XBJEd",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "be2f7a62-c91f-4c01-bf7c-037e8b4ad40d",
+              "name": "score",
+              "value": "={{ $json.output }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1300,
+        0
+      ],
+      "id": "ca9cee91-c1fa-4be5-8b3d-89faad7e81a0",
+      "name": "Edit Fields"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "base": {
+          "__rl": true,
+          "value": "appNxkkhryDQKE1Uq",
+          "mode": "list",
+          "cachedResultName": "Lead Generation",
+          "cachedResultUrl": "https://airtable.com/appNxkkhryDQKE1Uq"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblLfbqNcA6Vk3xvI",
+          "mode": "list",
+          "cachedResultName": "Lead Submissions",
+          "cachedResultUrl": "https://airtable.com/appNxkkhryDQKE1Uq/tblLfbqNcA6Vk3xvI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Lead Score": "={{ $json.score }}",
+            "id": "={{ $('Airtable1').item.json.id }}"
+          },
+          "matchingColumns": [
+            "id"
+          ],
+          "schema": [
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": true
+            },
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "company_size",
+              "displayName": "company_size",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "1-10",
+                  "value": "1-10"
+                },
+                {
+                  "name": "11-50",
+                  "value": "11-50"
+                },
+                {
+                  "name": "51-200",
+                  "value": "51-200"
+                },
+                {
+                  "name": "201-500",
+                  "value": "201-500"
+                },
+                {
+                  "name": "501-1000",
+                  "value": "501-1000"
+                },
+                {
+                  "name": "1000+",
+                  "value": "1000+"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "interest_level",
+              "displayName": "interest_level",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        1520,
+        0
+      ],
+      "id": "a8be4d2e-f230-4d14-ad85-526f27d67d7d",
+      "name": "Airtable",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xCnjneCIzCob8KL9",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": false,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 2
+          },
+          "conditions": [
+            {
+              "id": "1f7d6518-a3fc-4f40-b5b9-ff44d8e269e5",
+              "leftValue": "={{ $('Edit Fields').item.json.score }}",
+              "rightValue": "=hot",
+              "operator": {
+                "type": "string",
+                "operation": "equals",
+                "name": "filter.operator.equals"
+              }
+            }
+          ],
+          "combinator": "and"
+        },
+        "options": {
+          "ignoreCase": true
+        }
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.2,
+      "position": [
+        1740,
+        0
+      ],
+      "id": "e6851d90-5670-4e6b-9fa7-2c53e796ee67",
+      "name": "If1"
+    },
+    {
+      "parameters": {
+        "authentication": "oAuth2",
+        "select": "channel",
+        "channelId": {
+          "__rl": true,
+          "value": "C094P7R1S01",
+          "mode": "list",
+          "cachedResultName": "n8n-workflow"
+        },
+        "text": "=🚨 New Hot Lead: {{$json.fields.full_name}}, Budget {{$json.fields.budget}}, Interest: {{$json.fields.interest_level}} – <{{$('ConstructUrl').item.json.baseUrl}}|Check Airtable for details>.\n",
+        "otherOptions": {}
+      },
+      "type": "n8n-nodes-base.slack",
+      "typeVersion": 2.3,
+      "position": [
+        1960,
+        -100
+      ],
+      "id": "2b10bcbb-b755-444f-9e2a-8c7967d91e5e",
+      "name": "Slack",
+      "webhookId": "9aef1fce-7779-4a91-9c10-af741a7c65fe",
+      "credentials": {
+        "slackOAuth2Api": {
+          "id": "6e8pqllGHCCaneIT",
+          "name": "Simple-devs Slack account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "create",
+        "base": {
+          "__rl": true,
+          "value": "appNxkkhryDQKE1Uq",
+          "mode": "list",
+          "cachedResultName": "Lead Generation",
+          "cachedResultUrl": "https://airtable.com/appNxkkhryDQKE1Uq"
+        },
+        "table": {
+          "__rl": true,
+          "value": "tblLfbqNcA6Vk3xvI",
+          "mode": "list",
+          "cachedResultName": "Lead Submissions",
+          "cachedResultUrl": "https://airtable.com/appNxkkhryDQKE1Uq/tblLfbqNcA6Vk3xvI"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "budget": "={{ $('Typeform Trigger').item.json.Budget }}",
+            "full_name": "={{ $json.full_name }}",
+            "email": "={{ $('Typeform Trigger').item.json.Email }}",
+            "phone": "={{ $('Typeform Trigger').item.json[\"Phone number\"] }}",
+            "company_size": "={{ $('Typeform Trigger').item.json[\"Company Size\"] }}",
+            "interest_level": "={{ $('Typeform Trigger').item.json[\"Interest Level\"] }}",
+            "Notes": "={{ $('Typeform Trigger').item.json.Notes }}",
+            "company_name": "={{ $('Typeform Trigger').item.json.Company }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "full_name",
+              "displayName": "full_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "email",
+              "displayName": "email",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "phone",
+              "displayName": "phone",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company_name",
+              "displayName": "company_name",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "company_size",
+              "displayName": "company_size",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "1-10",
+                  "value": "1-10"
+                },
+                {
+                  "name": "11-50",
+                  "value": "11-50"
+                },
+                {
+                  "name": "51-200",
+                  "value": "51-200"
+                },
+                {
+                  "name": "201-500",
+                  "value": "201-500"
+                },
+                {
+                  "name": "501-1000",
+                  "value": "501-1000"
+                },
+                {
+                  "name": "1000+",
+                  "value": "1000+"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "budget",
+              "displayName": "budget",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "interest_level",
+              "displayName": "interest_level",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "options",
+              "options": [
+                {
+                  "name": "Low",
+                  "value": "Low"
+                },
+                {
+                  "name": "Medium",
+                  "value": "Medium"
+                },
+                {
+                  "name": "High",
+                  "value": "High"
+                }
+              ],
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Submission Date",
+              "displayName": "Submission Date",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "dateTime",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "Notes",
+              "displayName": "Notes",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "Lead Score",
+              "displayName": "Lead Score",
+              "required": false,
+              "defaultMatch": false,
+              "canBeUsedToMatch": true,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.airtable",
+      "typeVersion": 2.1,
+      "position": [
+        260,
+        -20
+      ],
+      "id": "d02f2e34-9133-4e81-9077-27d64b8d865d",
+      "name": "Airtable1",
+      "credentials": {
+        "airtableTokenApi": {
+          "id": "xCnjneCIzCob8KL9",
+          "name": "Airtable Personal Access Token account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "formId": "a0Ol7Z89"
+      },
+      "type": "n8n-nodes-base.typeformTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        -120,
+        200
+      ],
+      "id": "9abd99a5-8beb-483b-81db-864ac66c9dbf",
+      "name": "Typeform Trigger",
+      "webhookId": "0c80e90c-eb5e-44d9-9179-a5aed128f53d",
+      "credentials": {
+        "typeformApi": {
+          "id": "4YJNdsPZ2lClm7fM",
+          "name": "Typeform account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "b8c4e905-8123-4dec-b04a-5ab9e3eb9679",
+              "name": "full_name",
+              "value": "={{ $json[\"First name\"] }} {{ $json[\"Last name\"] }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        100,
+        200
+      ],
+      "id": "ac45a986-e763-49fb-a91f-90fae3c24113",
+      "name": "Edit FullName"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cda4ebf1-a7a2-4771-b6b7-a4be01d86dbf",
+              "name": "baseUrl",
+              "value": "=https://airtable.com/appNxkkhryDQKE1Uq/tblLfbqNcA6Vk3xvI/{{ $json.id }}",
+              "type": "string"
+            }
+          ]
+        },
+        "includeOtherFields": true,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        480,
+        -20
+      ],
+      "id": "7850d2ac-57da-4b2f-8e33-99cb93a9c82f",
+      "name": "ConstructUrl"
+    },
+    {
+      "parameters": {
+        "amount": 2,
+        "unit": "minutes"
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        2180,
+        -100
+      ],
+      "id": "9bb6a947-5162-48c3-aba2-f0b36b8b1709",
+      "name": "Wait",
+      "webhookId": "c04d1a13-49e7-454d-9f71-b6696a415b69"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Airtable').item.json.fields.email }}",
+        "subject": "Thanks for reaching out — Let’s connect!",
+        "message": "=Hi {{$('Airtable').item.json.fields.full_name}}, thanks for reaching out to us!\n\nWe’ve received your details and we’re excited to learn more about your goals.\n\nA team member will get in touch shortly. In the meantime, feel free to reply here if you have any questions or would like to book a quick chat.\n\n– REM WASTE",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [
+        2400,
+        -100
+      ],
+      "id": "d16bd585-9731-487d-852e-5665dcd6fbc4",
+      "name": "Gmail",
+      "webhookId": "540f4dda-6171-4a23-b1e4-909fd3557a12",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "fKMvJgJhfwsn3vKX",
+          "name": "Gmail account"
+        }
+      }
+    }
+  ],
+  "pinData": {
+    "Typeform Trigger": [
+      {
+        "json": {
+          "First name": "Paul Oke",
+          "Last name": "Oke",
+          "Phone number": "+12015551234",
+          "Email": "paul@advancedcloudpartners.com",
+          "Company": "Simple Developers",
+          "Company Size": "201-500",
+          "Interest Level": "High",
+          "Budget": "More than $10,000",
+          "Notes": "tested"
+        }
+      }
+    ]
+  },
+  "connections": {
+    "If": {
+      "main": [
+        [
+          {
+            "node": "Lead Qualification + Scoring Agent1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Lead Qualification + Scoring Agent1": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model4": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Lead Qualification + Scoring Agent1",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "Airtable",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable": {
+      "main": [
+        [
+          {
+            "node": "If1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If1": {
+      "main": [
+        [
+          {
+            "node": "Slack",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Airtable1": {
+      "main": [
+        [
+          {
+            "node": "ConstructUrl",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Typeform Trigger": {
+      "main": [
+        [
+          {
+            "node": "Edit FullName",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit FullName": {
+      "main": [
+        [
+          {
+            "node": "Airtable1",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "ConstructUrl": {
+      "main": [
+        [
+          {
+            "node": "If",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Slack": {
+      "main": [
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Gmail",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": true,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "66b0644f-c364-44e7-80c4-8d2d1af5df75",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "a08ad5b7d0711f62c45d94cb130ec6b9681fef99b98305d169d281de59801b19"
+  },
+  "id": "UqLwkhlUQTC5sK5L",
+  "tags": []
+}
