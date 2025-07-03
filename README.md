@@ -1,6 +1,6 @@
 # 🧾 REM-Waste Lead Scoring Workflow
 
-A smart lead automation system built with **n8n** to capture, qualify, and score leads from Typeform, notify the sales team via Slack for high-value opportunities, and trigger automated follow-ups via email and WhatsApp — all using free-tier tools.
+A smart lead automation system built with **n8n** to capture, qualify, and score leads from Typeform, notify the sales team via Slack for high-value opportunities, and trigger automated follow-ups via email — all using free-tier tools.
 
 ---
 
@@ -20,7 +20,6 @@ A smart lead automation system built with **n8n** to capture, qualify, and score
 This workflow captures, qualifies, scores, and stores incoming leads from a Typeform. It then:
 - Sends a Slack notification if the lead is classified as "Hot"
 - Triggers a follow-up email (Gmail)
-- Sends a WhatsApp message for engagement
 
 ---
 
@@ -34,7 +33,6 @@ This workflow captures, qualifies, scores, and stores incoming leads from a Type
 | **OpenAI / LangChain** | AI-based lead scoring     |
 | **Slack**    | Team notification                |
 | **Gmail**    | Email follow-up                  |
-| **Twilio**   | WhatsApp message (optional)      |
 
 ---
 
